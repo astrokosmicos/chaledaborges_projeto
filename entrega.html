@@ -21,11 +21,24 @@
                 <div class="delivery-copy">
                     <span class="eyebrow">entrega sem complicação</span>
                     <h2>Descubra o tempo e o valor da sua entrega.</h2>
-                    <p>Digite seu CEP para uma estimativa.</p>
+                    <p>Selecione seu bairro para verificar a taxa e o tempo estimado.</p>
                     <div class="cep-row">
+                        <select id="bairroSelect" class="input-select">
+
+
+
+
+
+
+
+                            
+                        </select>
                         <input id="cepInput" inputmode="numeric" maxlength="9" placeholder="00000-000"/>
                         <button class="primary-btn" id="calcDeliveryBtn">Calcular</button>
-                    
+                    </div>
+                    <div class="delivery-result" id="deliveryResult">
+                        <span>⌖</span>
+                        <div><strong>Informe seu CEP</strong></div>
                     </div>
                 </div>
             </div>
