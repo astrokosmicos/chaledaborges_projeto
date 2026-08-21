@@ -24,29 +24,25 @@
                     <p>Selecione seu bairro para verificar a taxa e o tempo estimado.</p>
                     <div class="cep-row">
                         <select id="bairroSelect" class="input-select">
-
-
-
-
-
-
-
-                            
-                        </select>
-                        <input id="cepInput" inputmode="numeric" maxlength="9" placeholder="00000-000"/>
+                            <option value="" disabled selected>Selecione seu bairro...</option>
+                            <option value="Centro">Centro</option>
+                            <option value="imocasa">Imocasa</option>
+                            <option value="grassmann">Grassmann</option>
+                            <option value="contestado">Contestado</option>
+                            <option value="areia">Areia</option>
+                            <option value="picadilly">Picadilly</option>
+                            <option value="rolantinho">Rolantinho</option>
+                            <option value="alto_rolantinho">Alto Rolantinho</option>
+                            </select>
+                      
                         <button class="primary-btn" id="calcDeliveryBtn">Calcular</button>
                     </div>
                     <div class="delivery-result" id="deliveryResult">
                         <span>⌖</span>
-                        <div><strong>Informe seu CEP</strong></div>
+                        <div><strong>Selecione seu bairro</strong><small>Vamos estimar prazo e taxa de entrega.</small></div>
                     </div>
                 </div>
             </div>
-
-
-
-
-
         </main>
 
 </body>
