@@ -11,7 +11,6 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!--comentario teste-->
   <div class="toast" id="toast" aria-live="polite"></div>
   <header class="topbar">
     <a class=" brand" href="index.html">
@@ -29,10 +28,11 @@
     </nav> 
 
     <div class="top-actions">
-      <a class="icon-btn" href="login.html">Entrar</a>
+      <a class="icon-btn" id="loginBtn" href="login.html">Entrar</a>
       <button class="cart-btn" id="cartBtn">
         <span>🛒</span> Carrinho <b id="cartCount">0</b>
       </button>
+      <button class="menu-btn" id="menuBtn" aria-label="Abrir menu">☰</button>
     </div>
   </header>
 
@@ -46,6 +46,10 @@
           <a class="primary-btn" href="cardapio.html">Ver Cardápio <span>↗</span></a>
           <a class="ghost-btn" href="entrega.html">Calcular entrega</a>
 
+        </div>
+                <div class="hero-meta">
+          <span>● Aberto agora</span>
+          <span>⌁ Entrega estimada: <strong id="heroEta">35–55 min</strong></span>
         </div>
       </div>
       <div class="hero-art">
