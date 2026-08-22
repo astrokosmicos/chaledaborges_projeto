@@ -231,3 +231,71 @@ a{
   height: 470px;
   position: relative;
 }
+.blob {
+  position: absolute;
+  border-radius: 48% 52% 42% 58%;
+  filter: saturate(.9);
+}
+
+.blob-one {
+  width: 360px;
+  height: 420px;
+  background: #d9c5a8;
+  right: 8%;
+  top: 10px;
+  transform: rotate(14deg);
+}
+
+.blob-two {
+  width: 300px;
+  height: 340px;
+  background: #b9c0a5;
+  right: 25%;
+  top: 80px;
+  transform: rotate(-17deg);
+  opacity: .8;
+}
+
+.coffee-cup {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+.cup {
+  font-size: 180px;
+  filter: drop-shadow(0 25px 20px rgba(52, 42, 31, .18));
+  transform: rotate(-8deg);
+}
+
+.cup-steam {
+  position: absolute;
+  top: 90px;
+  font-size: 40px;
+  letter-spacing: 8px;
+  color: #fff;
+  transform: rotate(-8deg);
+  z-index: 2;
+}
+
+.floating-note {
+  position: absolute;
+  right: 2%;
+  bottom: 55px;
+  background: var(--paper);
+  padding: 17px 22px;
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  font-family: "Playfair Display";
+  font-size: 19px;
+  line-height: 1.1;
+  transform: rotate(5deg);
+}
+
+.floating-note span {
+  color: var(--accent);
+  display: block;
+  text-align: right;
+}
+
