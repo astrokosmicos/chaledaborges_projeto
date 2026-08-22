@@ -26,3 +26,34 @@ body{
     color: var(--ink);
     font-family: 'DM Sans', sans-serif;
 }
+
+button 
+input
+select
+textarea {
+    font-family: inherit;
+}
+
+button,
+a {
+    cursor: pointer;
+}
+
+a{
+    text-decoration: none;
+    color: inherit;
+}
+
+.topbar{
+    height: 82px;
+    padding: 0 5vw;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position:sticky;
+    top:0;
+    z-index: 20;
+    background: rgba(245, 241, 233, .9);
+    backdrop-filter: blur(18px);
+    border-bottom: 1px solid rgba(0, 0, 0, .06);
+}
