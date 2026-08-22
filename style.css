@@ -135,3 +135,55 @@ a{
     margin: 6px;
 
 }
+.menu-btn {
+  display: none;
+  font-size: 22px;
+}
+
+/* sessão principal*/
+
+.hero {
+  min-height: 650px;
+  padding: 80px 9vw 90px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 30px;
+  overflow: hidden;
+}
+
+/* texto de apresentação acima dos títulos */
+.eyebrow {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.hero h1 {
+  font-family: "Playfair Display";
+  font-size: clamp(46px, 6vw, 78px);
+  font-weight: 500;
+  line-height: .98;
+  margin: 18px 0 22px;
+  letter-spacing: -2.5px;
+}
+
+.hero h1 em {
+  color: var(--accent);
+  font-style: italic;
+}
+
+.hero p {
+  font-size: 17px;
+  line-height: 1.7;
+  max-width: 560px;
+  color: var(--muted);
+}
+
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 28px;
+}
