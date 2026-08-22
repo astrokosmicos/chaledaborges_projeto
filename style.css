@@ -299,3 +299,225 @@ a{
   text-align: right;
 }
 
+/* sobre nós */
+.quick-info {
+  background: var(--dark);
+  color: #fff;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding: 22px 8vw;
+}
+
+
+.quick-info>div {
+  padding: 12px 25px;
+  border-right: 1px solid rgba(255, 255, 255, .13);
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  column-gap: 8px;
+}
+
+
+.quick-info>div:last-child {
+  border: 0;
+}
+
+
+.quick-info span {
+  grid-row: span 2;
+  font-size: 22px;
+  color: #d8ba90;
+}
+
+
+.quick-info strong {
+  font-size: 13px;
+}
+
+
+.quick-info small {
+  font-size: 11px;
+  color: #aaa79f;
+}
+
+
+/*cardapio e busca */
+
+.menu-section,
+.delivery-section,
+.about-section {
+  padding: 100px 8vw;
+}
+
+
+.section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 30px;
+}
+
+
+.section-heading h2,
+.delivery-copy h2,
+.about-section h2 {
+  font-family: "Playfair Display";
+  font-weight: 500;
+  font-size: 48px;
+  line-height: 1.05;
+  margin: 10px 0 0;
+  letter-spacing: -1px;
+}
+
+
+
+
+.search-wrap {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 11px 16px;
+  display: flex;
+  gap: 8px;
+  width: min(330px, 100%);
+}
+
+
+.search-wrap input {
+  border: 0;
+  outline: 0;
+  background: transparent;
+  width: 100%;
+}
+
+
+
+
+.category-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 35px 0;
+}
+
+
+.category-tabs button {
+  border: 1px solid var(--line);
+  background: transparent;
+  border-radius: 999px;
+  padding: 9px 15px;
+  color: var(--muted);
+}
+
+
+.category-tabs button.active {
+  background: var(--dark);
+  color: #fff;
+  border-color: var(--dark);
+}
+
+
+
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+
+.menu-card {
+  background: var(--paper);
+  border: 1px solid #e8e1d5;
+  border-radius: 20px;
+  padding: 21px;
+  min-height: 205px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: .2s;
+}
+
+
+.menu-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow);
+}
+
+
+.menu-card-content {
+  flex: 1;
+}
+
+
+.menu-card-top,
+.menu-card-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+
+.menu-card h3 {
+  font-family: "Playfair Display";
+  font-size: 23px;
+  font-weight: 500;
+  line-height: 1.15;
+  margin: 9px 0 0;
+}
+
+
+.menu-card p {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.55;
+  margin: 10px 0 18px;
+}
+
+
+
+
+.category-label,
+.featured-label {
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+
+.category-label {
+  color: var(--accent);
+}
+
+
+.featured-label {
+  background: #e7dfd1;
+  color: #5d4b35;
+  padding: 5px 8px;
+  border-radius: 999px;
+}
+
+
+.price {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+
+.add-btn {
+  border: 1px solid var(--line);
+  background: #f1ece2;
+  border-radius: 999px;
+  padding: 9px 14px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+
+.add-btn:hover {
+  background: var(--dark);
+  color: #fff;
+}
+
+
