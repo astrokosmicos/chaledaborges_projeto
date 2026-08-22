@@ -70,6 +70,36 @@
         </div>
         <button class="primary-btn" id="saveBusiness">Salvar informações</button>
       </div>
-            </div>
+ <div class="admin-panel" id="admin-delivery">
+        <div class="form-grid">
+          <label for="adminBaseFee">Taxa base (R$)
+            <input type="number" step="0.50" id="adminBaseFee">
+          </label>
+          
+          <label for="adminRadius">Raio de entrega (km)
+            <input type="number" step="1" id="adminRadius">
+          </label>
+          
+          <label for="adminMinTime">Tempo mínimo
+            <input type="number" id="adminMinTime">
+          </label>
+          
+          <label for="adminMaxTime">Tempo máximo
+            <input type="number" id="adminMaxTime">
+          </label>
         </div>
-    </main>
+        <button class="primary-btn" id="saveDelivery">Salvar entrega</button>
+      </div>
+      <div class="admin-panel" id="admin-items">
+        <div class="admin-add-row">
+          <input id="newItemName" placeholder="Nome do item">
+          <input id="newItemPrice" type="number" step="0.01" placeholder="Preço">
+          <select id="newItemCategory"></select>
+          <button class="primary-btn" id="addItem">Adicionar</button>
+        </div>
+        <div id="adminItemsList"></div>
+      </div>
+    </div>
+  </main>
+  </body>
+  </html> 
