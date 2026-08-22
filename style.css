@@ -88,3 +88,50 @@ a{
     letter-spacing: 1.4px;
     text-transform: uppercase;
 }
+
+.brand strong,
+.footer-brand strong {
+    display: block;
+    font-size: 15px;
+
+}
+
+.main-nav a:hover {
+    color: var(--accent);
+}
+
+.topactions {
+    display:flex;
+    gap: 10px;
+    align-items: center;
+}
+.icon-btn,
+.ghost-btn,
+.cart-btn,
+.menu-btn {
+    border: 0;
+    background: none;
+    padding: 11px 14px;
+    border-radius: 999px;
+
+}
+
+.icon-btn:hover,
+.ghost-btn:hover {
+    background:#e9e3d8;
+}
+
+/*carrinho*/
+.cart-btn {
+    background: var(--dark);
+    color:white;
+}
+
+.cart-btn b{
+    background: #c99f69;
+    color: #1f1f1d;
+    padding: 2px 7px;
+    border-radius: 20px;
+    margin: 6px;
+
+}
