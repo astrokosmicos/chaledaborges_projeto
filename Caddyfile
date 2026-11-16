@@ -1,16 +1,24 @@
 {$SITE_DOMAIN} {
- encode zstd gzip
- @api path /api/*
- handle @api { reverse_proxy app:80 }
- @html path / /html/*.html
- handle @html { reverse_proxy app:80 }
- handle {
-  root * /srv/original
-  @relative path /html/js/* /html/style.css
-  uri @relative strip_prefix /html
-  file_server
- }
- header X-Content-Type-Options nosniff
- header Referrer-Policy strict-origin-when-cross-origin
- header X-Frame-Options DENY
+    encode zstd gzip
+
+@api path /api/*
+handle @api {
+    rewrite * /api.php
+    reverse_proxy app:80 {
+        header_up X-original-uri {http.request.orig_uri}
+    }
+}
+
+    handle {
+        root * /srv/original
+
+        @home path /
+        rewrite @home /html/index.html
+
+        file_server
+    }
+
+    header X-Content-Type-Options nosniff
+    header Referrer-Policy strict-origin-when-cross-origin
+    header X-Frame-Options DENY
 }

@@ -1,7 +1,10 @@
 <?php
 require '/var/www/app/bootstrap.php';
 
-$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$path = parse_url(
+    $_SERVER['HTTP_X_ORIGINAL_URI'] ?? $_SERVER['REQUEST_URI'],
+    PHP_URL_PATH
+);
 $method = $_SERVER['REQUEST_METHOD'];
 
 try {
