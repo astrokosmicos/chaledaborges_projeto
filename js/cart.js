@@ -83,16 +83,37 @@ export function closeCart() {
   $("cartDrawer").classList.remove("open");
   $("cartDrawer").setAttribute("aria-hidden", "true");
 }
+export function initCart() {
   document.addEventListener("click", (e) => {
     const add = e.target.closest("[data-add]");
     if (add) return addToCart(Number(add.dataset.add));
+
     const qty = e.target.closest("[data-qty]");
-    if (qty) return changeQty(Number(qty.dataset.qty), Number(qty.dataset.delta));
+    if (qty) {
+      return changeQty(
+        Number(qty.dataset.qty),
+        Number(qty.dataset.delta)
+      );
+    }
   });
 
   const cartBtn = $("cartBtn");
-  if (cartBtn) cartBtn.addEventListener("click", openCart);
-  document.querySelectorAll('[data-close="cartDrawer"]').forEach((b) => b.addEventListener("click", closeCart));
-  $("overlay").addEventListener("click", closeCart);
+
+  if (cartBtn) {
+    cartBtn.addEventListener("click", openCart);
+  }
+
+  document
+    .querySelectorAll('[data-close="cartDrawer"]')
+    .forEach((b) => {
+      b.addEventListener("click", closeCart);
+    });
+
+  const overlay = $("overlay");
+
+  if (overlay) {
+    overlay.addEventListener("click", closeCart);
+  }
+
   renderCart();
 }

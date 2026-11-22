@@ -1,3 +1,4 @@
+export const API_BASE_URL = "/api";
 export const STORAGE_KEYS = {
   state: "chaleDaBorges:state:v3",
   cart: "chaleDaBorges:cart:v1",

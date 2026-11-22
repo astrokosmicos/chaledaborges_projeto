@@ -1,59 +1,132 @@
-import { getUsers, saveUsers, getSession, saveSession, clearSession } from "./storage.js";
+import { API_BASE_URL } from "./config.js";
 
-export async function hashPassword(password) {
-  const data = new TextEncoder().encode(`chale-da-borges::${password}`);
-  if (globalThis.crypto?.subtle) {
-    const buf = await crypto.subtle.digest("SHA-256", data);
-    return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
+const API_URL = API_BASE_URL;
+
+let csrfToken = null;
+
+async function getCsrfToken() {
+  const response = await fetch(`${API_URL}/session`, {
+    credentials: "same-origin",
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error || "Erro ao iniciar sessão.");
   }
- 
-  let h = 0;
-  for (const byte of data) h = (h * 31 + byte) >>> 0;
-  return `weak-${h}`;
-}
 
-export const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  csrfToken = data.csrf;
+  return csrfToken;
+}
 
 export async function registerUser({ name, email, phone, password }) {
   name = name.trim();
   email = email.trim().toLowerCase();
-  if (name.length < 2) throw new Error("Digite seu nome.");
-  if (!isValidEmail(email)) throw new Error("Digite um e-mail válido.");
-  if (password.length < 6) throw new Error("A senha precisa ter pelo menos 6 caracteres.");
 
-  const users = getUsers();
-  if (users.some((u) => u.email === email)) throw new Error("Este e-mail já está cadastrado.");
+  if (name.length < 2) {
+    throw new Error("Digite seu nome.");
+  }
 
-  const user = {
-    id: Date.now(),
-    name,
-    email,
-    phone: phone || "",
-    passHash: await hashPassword(password),
-    createdAt: new Date().toISOString(),
-  };
-  users.push(user);
-  saveUsers(users);
-  saveSession({ userId: user.id });
-  return user;
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    throw new Error("Digite um e-mail válido.");
+  }
+
+  if (password.length < 12) {
+    throw new Error("A senha precisa ter pelo menos 12 caracteres.");
+  }
+
+  if (password.length > 256) {
+    throw new Error("A senha deve ter no máximo 256 caracteres.");
+  }
+
+  await getCsrfToken();
+
+  const response = await fetch(`${API_URL}/register`, {
+    method: "POST",
+    credentials: "same-origin",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRF-Token": csrfToken,
+    },
+    body: JSON.stringify({
+      name,
+      email,
+      phone: phone || "",
+      password,
+    }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error || "Não foi possível criar a conta.");
+  }
+
+  csrfToken = data.csrf || csrfToken;
+
+  return data.user;
 }
 
 export async function loginUser(email, password) {
-  email = email.trim().toLowerCase();
-  const user = getUsers().find((u) => u.email === email);
-  if (!user || user.passHash !== (await hashPassword(password))) {
-    throw new Error("E-mail ou senha incorretos.");
+  await getCsrfToken();
+
+  const response = await fetch(`${API_URL}/login`, {
+    method: "POST",
+    credentials: "same-origin",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRF-Token": csrfToken,
+    },
+    body: JSON.stringify({
+      email: email.trim().toLowerCase(),
+      password,
+    }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error || "Não foi possível entrar.");
   }
-  saveSession({ userId: user.id });
-  return user;
-}
 
-export function currentUser() {
-  const session = getSession();
-  if (!session) return null;
-  return getUsers().find((u) => u.id === session.userId) || null;
-}
+  csrfToken = data.csrf || csrfToken;
 
-export function logoutUser() {
-  clearSession();
+  return data.user;
+}
+export async function currentUser() {
+  const response = await fetch(`${API_URL}/session`, {
+    credentials: "same-origin",
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error || "Erro ao verificar sessão.");
+  }
+
+  csrfToken = data.csrf || csrfToken;
+
+  return data.user || null;
+}
+export async function logoutUser() {
+  await getCsrfToken();
+
+  const response = await fetch(`${API_URL}/logout`, {
+    method: "POST",
+    credentials: "same-origin",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRF-Token": csrfToken,
+    },
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error || "Não foi possível sair da conta.");
+  }
+
+  csrfToken = data.csrf || null;
+
+  return true;
 }

@@ -6,14 +6,32 @@
   <title>Entrar — Chalé da Borges</title>
   <link rel="stylesheet" href="../style.css" />
 </head>
+
 <body class="page-center">
-    <div class="modal small-modal">
-        <span class="eyebrow">bem-vindo de volta</span>
-        <h2>Entrar</h2>
-        <label>E-mail<input type="email" id= "loginEmail" placeholder="voce@email.com" /></label>
-        <label>Senha<input type="password" id="loginPassword" placeholder="••••••••" /></label>
-        <button class="primary-btn" id="doLogin">Entrar</button>
-        <p class="modal-foot">Ainda não tem cadastro? <a href="cadastro.html" class="text-btn">Cadastre-se</a></p>
-    </div>
+  <div class="modal small-modal">
+    <span class="eyebrow">bem-vindo de volta</span>
+    <h2>Entrar</h2>
+
+    <form id="loginForm">
+      <label>E-mail <input type="email" id="loginEmail" placeholder="voce@email.com" required/>
+      </label>
+
+      <label> Senha <input type="password" id="loginPassword" placeholder="••••••••" required/>
+      </label>
+
+      <p id="loginError" class="form-error" hidden></p>
+
+      <button type="submit" class="primary-btn" id="doLogin">
+        Entrar
+      </button>
+    </form>
+
+    <p class="modal-foot">
+      Ainda não tem cadastro?
+      <a href="cadastro.html" class="text-btn">Cadastre-se</a>
+    </p>
+  </div>
+
+  <script type="module" src="../js/login.js"></script>
 </body>
 </html>

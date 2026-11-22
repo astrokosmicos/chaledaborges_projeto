@@ -1,3 +1,4 @@
+console.log("CADASTRO.JS CARREGADO");
 import { mountShell } from "./layout.js";
 import { registerUser } from "./auth.js";
 import { $, toast, bindPhoneMask } from "./utils.js";

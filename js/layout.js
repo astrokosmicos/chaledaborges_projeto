@@ -5,18 +5,32 @@ import { applyBusiness } from "./business.js";
 import { currentUser, logoutUser } from "./auth.js";
 import { $ } from "./utils.js";
 
-function updateAuthLinks() {
-  const user = currentUser();
+async function updateAuthLinks() {
+  let user = null;
+
+  try {
+    user = await currentUser();
+  } catch (error) {
+    console.error("Erro ao verificar usuário:", error);
+  }
+
   for (const id of ["loginBtn", "mobileLogin"]) {
     const el = $(id);
     if (!el) continue;
+
     if (user) {
       el.textContent = `Sair (${user.name.split(" ")[0]})`;
       el.removeAttribute("href");
-      el.onclick = (e) => {
+
+      el.onclick = async (e) => {
         e.preventDefault();
-        logoutUser();
-        location.reload();
+
+        try {
+          await logoutUser();
+          location.reload();
+        } catch (error) {
+          alert(error.message);
+        }
       };
     } else {
       el.textContent = "Entrar";
@@ -51,7 +65,7 @@ export function mountShell() {
   initCart();
   initCheckout();
   initMobileMenu();
-  updateAuthLinks();
+  void updateAuthLinks();
 
   document.addEventListener("keydown", (e) => {
     if (e.key !== "Escape") return;
