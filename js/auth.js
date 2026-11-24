@@ -130,3 +130,25 @@ export async function logoutUser() {
 
   return true;
 }
+
+export async function createOrder(order) {
+  await getCsrfToken();
+
+  const response = await fetch(`${API_URL}/orders`, {
+    method: "POST",
+    credentials: "same-origin",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRF-Token": csrfToken,
+    },
+    body: JSON.stringify(order),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error || "Não foi possível registrar o pedido.");
+  }
+
+  return data;
+}

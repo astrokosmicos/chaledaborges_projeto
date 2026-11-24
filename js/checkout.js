@@ -2,7 +2,7 @@ import { PAYMENT_METHODS } from "./config.js";
 import { getState, getOrders, saveOrders, getSavedBairro, saveBairro } from "./storage.js";
 import { getCartRows, cartSubtotal, clearCart, closeCart } from "./cart.js";
 import { findBairro, bairroOptionsHTML } from "./delivery.js";
-import { currentUser } from "./auth.js";
+import { currentUser, createOrder } from "./auth.js";
 import { isOpenNow, nextOpeningText } from "./business.js";
 import { $, money, escapeHTML, digits, maskPhone, bindPhoneMask, toast } from "./utils.js";
 
@@ -22,14 +22,14 @@ function updateTotals() {
   $("checkoutTotal").textContent = money(subtotal + (fee || 0));
 }
 
-function openCheckout() {
+async function openCheckout() {
   const rows = getCartRows();
   if (!rows.length) return toast("Seu carrinho está vazio.");
 
   $("checkoutSummary").innerHTML = rows
     .map((r) => `<div class="summary-line"><span>${r.qty}× ${escapeHTML(r.name)}</span><b>${money(r.price * r.qty)}</b></div>`)
     .join("");
-  const user = currentUser();
+  const user = await currentUser();
   if (user) {
     if (!$("checkoutName").value) $("checkoutName").value = user.name;
     if (!$("checkoutPhone").value) $("checkoutPhone").value = maskPhone(user.phone);
@@ -81,9 +81,12 @@ export function whatsappLink(number, text) {
   return `https://wa.me/${n}?text=${encodeURIComponent(text)}`;
 }
 
-function placeOrder(e) {
+async function placeOrder(e) {
   e.preventDefault();
   const rows = getCartRows();
+  const apiItems = rows.map((item) => ({
+    product_id: Number(item.id), quantity: Number(item.qty), 
+  }));
   if (!rows.length) return showError("Seu carrinho está vazio.");
 
   const name = $("checkoutName").value.trim();
@@ -97,9 +100,10 @@ function placeOrder(e) {
   if (!street) return showError("Informe a rua e o número.");
 
   const method = $("paymentMethod").value;
+  const apiPayment = method === "Pix" ? "pix" : "cash";
   const subtotal = cartSubtotal();
   const complement = $("checkoutComplement").value.trim();
-  const user = currentUser();
+  const user = await currentUser();
 
   const order = {
     id: Date.now().toString(36).slice(-5).toUpperCase(),
@@ -117,7 +121,42 @@ function placeOrder(e) {
     change: method === "Dinheiro" ? Number(String($("checkoutChange").value).replace(",", ".")) || 0 : 0,
     notes: $("checkoutNotes").value.trim(),
   };
+if (!user) {
+  return showError("Faça login para finalizar seu pedido.");
+}
 
+const apiOrder = {
+  fulfillment: "delivery",
+  customer_name: name,
+  customer_phone: phone,
+  area_id: bairro.id,
+  address: order.address,
+  payment: apiPayment,
+  notes: order.notes,
+  items: apiItems,
+};
+
+if (apiPayment === "cash" && order.change > 0) {
+  apiOrder.change_for_cents = Math.round(order.change * 100);
+}
+
+const submitButton = $("checkoutForm").querySelector('[type="submit"]');
+
+if (submitButton?.disabled) return;
+if (submitButton) submitButton.disabled = true;
+
+try {
+  const result = await createOrder(apiOrder);
+
+  order.id = result.id;
+  order.total = result.total_cents / 100;
+
+} catch (error) {
+  showError(error.message);
+  return;
+} finally {
+  if (submitButton) submitButton.disabled = false;
+}
   const orders = getOrders();
   orders.push(order);
   saveOrders(orders);

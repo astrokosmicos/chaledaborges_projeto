@@ -33,6 +33,6 @@ export const DEFAULT_BAIRROS = [
   { id: "alto_rolantinho", name: "Alto Rolantinho", fee: 15, min: 50, max: 70 },
 ];
 
-export const PAYMENT_METHODS = ["Pix", "Dinheiro", "Cartão (na entrega)"];
+export const PAYMENT_METHODS = ["Pix", "Dinheiro"];
 
 export const ORDER_STATUS = ["novo", "em preparo", "saiu para entrega", "entregue", "cancelado"];
