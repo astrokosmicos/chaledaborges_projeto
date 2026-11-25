@@ -8,98 +8,202 @@
 </head>
 <body>
 
-    <main class="authcontainer" id="adminLoginSection">
-        <div class="auth-card small-modal">
-            <h2>Área da Dona</h2>
-            <p>Informe suas credenciais para gerenciar o site.</p>
+  <main class="auth-container" id="adminLoginSection">
+    <div class="modal small-modal">
 
-            <form id="adminLoginForm">
-                <label for="adminUser">Usuário
-                    <input type="text" id="adminUser" placeholder="admin" required>
-                </label>
+      <h2 id="adminLoginTitle">Área da dona</h2>
 
-                <label for="adminPass">Senha
-                    <input type="text" id="adminPass" placeholder="••••••••" required>
-            </label>
+      <p id="adminLoginText" class="modal-lead">
+        Informe suas credenciais para gerenciar o site.
+      </p>
 
-            <button type="submit" class="primary-btn full">Entrar no painel</button>
-            </form>
+      <form id="adminLoginForm">
+
+        <label for="adminUser">E-mail
+          <input type="email" id="adminUser"
+            placeholder="Seu e-mail" required>
+        </label>
+
+        <label for="adminPass">Senha
+          <input type="password" id="adminPass"
+            placeholder="Sua senha" required>
+        </label>
+
+        <p id="adminLoginError" class="form-error" hidden></p>
+
+        <button type="submit" id="adminLoginBtn"
+          class="primary-btn full">
+          Entrar no painel
+        </button>
+
+      </form>
+    </div>
+  </main>
+
+  <main class="admin-container" id="adminDashboardSection" hidden>
+    <div class="modal admin-modal">
+
+      <div class="admin-header">
+        <div>
+          <span class="eyebrow">Painel Administrativo</span>
+          <h2>Área da dona</h2>
         </div>
-    </main>
 
-    <main class="admin-container" id="adminDashboardSection" hidden>
-        <div class="modal admin-modal">
-
-            <div class="admin-header">
-                <div>
-                    <span class="eyebrow" >Painel Local</span>
-                    <h2>Área da dona</h2>
-                </div>
-                <div style="display: flex; gap: 10px; align-items: center;">
-                <span class="admin-badge">DEMO</span>
-                <button id="logoutBtn" class="danger-btn">Sair</button>
-            </div>
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <span class="admin-badge">ADMIN</span>
+          <button id="logoutBtn" class="danger-btn">Sair</button>
         </div>
-        <div class="admin-tabs";>
-        <button class="active" data-admin-tab="business">Estabelecimento</button>
+      </div>
+
+      <div class="admin-tabs">
+        <button class="active" data-admin-tab="business">
+          Estabelecimento
+        </button>
+
         <button data-admin-tab="delivery">Entrega</button>
+
         <button data-admin-tab="items">Cardápio</button>
-        </div>
 
-        <div class="admin-panel active" id="admin-business">
-            <div class="form-grid">
-                <label for="adminName">Nome
-                <input id="adminName">
-                </label>
+        <button data-admin-tab="orders">Pedidos</button>
+      </div>
 
-                <label for="adminTagline">Subtítulo
+      <!-- ESTABELECIMENTO -->
+
+      <div class="admin-panel active" id="admin-business">
+
+        <div class="form-grid">
+
+          <label for="adminName">Nome
+            <input id="adminName">
+          </label>
+
+          <label for="adminTagline">Subtítulo
             <input id="adminTagline">
           </label>
-          
+
           <label for="adminAbout" class="wide">Descrição
             <textarea id="adminAbout"></textarea>
           </label>
-          
+
           <label for="adminHours">Horário
             <input id="adminHours">
           </label>
-          
+
           <label for="adminEta">Tempo de entrega
             <input id="adminEta">
           </label>
+
         </div>
-        <button class="primary-btn" id="saveBusiness">Salvar informações</button>
+
+        <button class="primary-btn" id="saveBusiness">
+          Salvar informações
+        </button>
+
       </div>
- <div class="admin-panel" id="admin-delivery">
+
+      <!-- ENTREGAS -->
+
+      <div class="admin-panel" id="admin-delivery">
+
+        <h3>Gerenciamento de entregas</h3>
+
+        <p class="modal-lead">
+          Configure as taxas e os prazos de entrega por bairro.
+        </p>
+
         <div class="form-grid">
-          <label for="adminBaseFee">Taxa base (R$)
-            <input type="number" step="0.50" id="adminBaseFee">
+
+          <label for="newBairroName">Nome do bairro
+            <input id="newBairroName"
+              placeholder="Nome do bairro">
           </label>
-          
-          <label for="adminRadius">Raio de entrega (km)
-            <input type="number" step="1" id="adminRadius">
+
+          <label for="newBairroFee">Taxa de entrega (R$)
+            <input id="newBairroFee"
+              type="number" min="0" step="0.01">
           </label>
-          
-          <label for="adminMinTime">Tempo mínimo
-            <input type="number" id="adminMinTime">
+
+          <label for="newBairroMin">Tempo mínimo (minutos)
+            <input id="newBairroMin"
+              type="number" min="1" value="30">
           </label>
-          
-          <label for="adminMaxTime">Tempo máximo
-            <input type="number" id="adminMaxTime">
+
+          <label for="newBairroMax">Tempo máximo (minutos)
+            <input id="newBairroMax"
+              type="number" min="1" value="50">
           </label>
+
         </div>
-        <button class="primary-btn" id="saveDelivery">Salvar entrega</button>
+
+        <button class="primary-btn" id="addBairro" type="button">
+          Adicionar bairro
+        </button>
+
+        <h3>Bairros cadastrados</h3>
+
+        <div id="adminBairrosList"></div>
+
       </div>
+
+      <!-- CARDÁPIO -->
+
       <div class="admin-panel" id="admin-items">
+
+        <h3>Gerenciamento do cardápio</h3>
+
         <div class="admin-add-row">
+
           <input id="newItemName" placeholder="Nome do item">
-          <input id="newItemPrice" type="number" step="0.01" placeholder="Preço">
+
+          <input id="newItemPrice"
+            type="number" min="0" step="0.01"
+            placeholder="Preço">
+
           <select id="newItemCategory"></select>
-          <button class="primary-btn" id="addItem">Adicionar</button>
+
+          <textarea id="newItemDescription"
+            placeholder="Descrição do produto"></textarea>
+
+          <button class="primary-btn" id="addItem" type="button">
+            Adicionar
+          </button>
+
         </div>
+
         <div id="adminItemsList"></div>
+
       </div>
+
+      <!-- PEDIDOS -->
+
+      <div class="admin-panel" id="admin-orders">
+
+        <div class="admin-header">
+
+          <div>
+            <h3>Gerenciamento de pedidos</h3>
+
+            <p class="modal-lead">
+              Total de pedidos:
+              <strong id="ordersCount">0</strong>
+            </p>
+          </div>
+
+          <button class="primary-btn"
+            id="refreshOrders" type="button">
+            Atualizar pedidos
+          </button>
+
+        </div>
+
+        <div id="adminOrdersList"></div>
+
+      </div>
+
     </div>
   </main>
-  </body>
-  </html> 
+
+  <script type="module" src="../js/admin.js"></script>
+
+</body>
+</html>

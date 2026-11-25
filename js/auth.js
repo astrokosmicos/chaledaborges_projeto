@@ -152,3 +152,98 @@ export async function createOrder(order) {
 
   return data;
 }
+export async function fetchOrders() {
+  const response = await fetch(`${API_URL}/orders`, {
+    credentials: "same-origin",
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error || "Erro ao consultar pedidos.");
+  }
+
+  return data.orders;
+}
+
+export async function updateOrderStatus(id, status) {
+  await getCsrfToken();
+
+  const response = await fetch(
+    `${API_URL}/orders/${id}/status`,
+    {
+      method: "PATCH",
+      credentials: "same-origin",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-Token": csrfToken,
+      },
+      body: JSON.stringify({ status }),
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error || "Erro ao atualizar status.");
+  }
+
+  return data;
+}
+export async function fetchProducts() {
+  const response = await fetch(`${API_URL}/products/manage`, {
+    credentials: "same-origin",
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error || "Erro ao consultar produtos.");
+  }
+
+  return data.products;
+}
+
+export async function createProduct(product) {
+  await getCsrfToken();
+
+  const response = await fetch(`${API_URL}/products`, {
+    method: "POST",
+    credentials: "same-origin",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRF-Token": csrfToken,
+    },
+    body: JSON.stringify(product),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error || "Erro ao cadastrar produto.");
+  }
+
+  return data;
+}
+
+export async function updateProduct(id, product) {
+  await getCsrfToken();
+
+  const response = await fetch(`${API_URL}/products/${id}`, {
+    method: "PATCH",
+    credentials: "same-origin",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRF-Token": csrfToken,
+    },
+    body: JSON.stringify(product),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error || "Erro ao atualizar produto.");
+  }
+
+  return data;
+}

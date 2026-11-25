@@ -1,64 +1,196 @@
-import { getState, saveState } from "./storage.js";
-import { slugify } from "./delivery.js";
+import { MENU_CATEGORIES } from "./menu-data.js";
+import {
+  fetchProducts,
+  createProduct,
+  updateProduct
+} from "./auth.js";
+
 import { $, escapeHTML, toast } from "./utils.js";
 
-export function renderDelivery() {
-  $("adminBairrosList").innerHTML = getState()
-    .bairros.map(
-      (b) => `
-    <div class="admin-bairro-row" data-id="${escapeHTML(b.id)}">
-      <input data-f="name" value="${escapeHTML(b.name)}" aria-label="Bairro">
-      <input data-f="fee" type="number" min="0" step="0.5" value="${b.fee}" aria-label="Taxa (R$)">
-      <input data-f="min" type="number" min="1" value="${b.min}" aria-label="Tempo mínimo">
-      <input data-f="max" type="number" min="1" value="${b.max}" aria-label="Tempo máximo">
-      <button class="danger-btn" type="button" data-act="delete">Excluir</button>
-    </div>`
-    )
-    .join("");
+let initialized = false;
+
+function categoryOptions(selected = "") {
+  const categories = [...new Set([
+    ...MENU_CATEGORIES,
+    ...(selected ? [selected] : [])
+  ])];
+
+  return categories.map(category => `
+    <option value="${escapeHTML(category)}"
+      ${category === selected ? "selected" : ""}>
+      ${escapeHTML(category)}
+    </option>
+  `).join("");
 }
 
-export function initDelivery() {
-  const list = $("adminBairrosList");
+function readPrice(value) {
+  const price = Math.round(Number(value) * 100);
 
-  list.addEventListener("change", (e) => {
-    const row = e.target.closest(".admin-bairro-row");
-    const field = e.target.dataset.f;
-    if (!row || !field) return;
-    const bairro = getState().bairros.find((b) => b.id === row.dataset.id);
-    if (!bairro) return;
-    bairro[field] = field === "name" ? e.target.value.trim() || bairro.name : Math.max(0, Number(e.target.value) || 0);
-    saveState();
-    toast("Bairro atualizado");
+  if (
+    value.trim() === "" ||
+    !Number.isInteger(price) ||
+    price < 0 ||
+    price > 10000000
+  ) {
+    throw new Error("Informe um preço válido.");
+  }
+
+  return price;
+}
+
+export async function renderItems() {
+  const list = $("adminItemsList");
+
+  try {
+    const products = await fetchProducts();
+
+    list.innerHTML = products.map(product => `
+      <div class="admin-item-row"
+        data-id="${Number(product.id)}">
+
+        <label>Nome
+          <input data-field="name"
+            value="${escapeHTML(product.name)}">
+        </label>
+
+        <label>Categoria
+          <select data-field="category">
+            ${categoryOptions(product.category)}
+          </select>
+        </label>
+
+        <label>Preço (R$)
+          <input data-field="price"
+            type="number"
+            min="0"
+            step="0.01"
+            value="${(Number(product.price_cents) / 100).toFixed(2)}">
+        </label>
+
+        <label>Descrição
+          <textarea data-field="description">${escapeHTML(product.description || "")}</textarea>
+        </label>
+
+        <label>
+          <input data-field="active"
+            type="checkbox"
+            ${Number(product.active) === 1 ? "checked" : ""}>
+          Produto disponível
+        </label>
+
+        <button type="button"
+          class="primary-btn"
+          data-action="save">
+          Salvar alterações
+        </button>
+
+      </div>
+    `).join("");
+
+  } catch (error) {
+    list.textContent = error.message;
+  }
+}
+
+export function initItems() {
+  if (initialized) return;
+  initialized = true;
+
+  const list = $("adminItemsList");
+  const category = $("newItemCategory");
+  const addButton = $("addItem");
+
+  category.innerHTML = categoryOptions();
+
+  addButton.addEventListener("click", async () => {
+    addButton.disabled = true;
+
+    try {
+      const name = $("newItemName").value.trim();
+
+      if (!name) {
+        throw new Error("Informe o nome do produto.");
+      }
+
+      const description = $("newItemDescription");
+
+      await createProduct({
+        name,
+        category: category.value,
+        description: description
+          ? description.value.trim()
+          : "",
+        price_cents: readPrice(
+          $("newItemPrice").value
+        )
+      });
+
+      $("newItemName").value = "";
+      $("newItemPrice").value = "";
+
+      if (description) {
+        description.value = "";
+      }
+
+      toast("Produto cadastrado com sucesso!");
+      await renderItems();
+
+    } catch (error) {
+      toast(error.message);
+    } finally {
+      addButton.disabled = false;
+    }
   });
 
-  list.addEventListener("click", (e) => {
-    const btn = e.target.closest('[data-act="delete"]');
-    if (!btn) return;
-    const id = btn.closest(".admin-bairro-row").dataset.id;
-    const state = getState();
-    if (state.bairros.length <= 1) return toast("Mantenha ao menos um bairro.");
-    state.bairros = state.bairros.filter((b) => b.id !== id);
-    saveState();
-    renderDelivery();
-    toast("Bairro removido");
-  });
+  list.addEventListener("click", async event => {
+    const button = event.target.closest(
+      '[data-action="save"]'
+    );
 
-  $("addBairro").addEventListener("click", () => {
-    const name = $("newBairroName").value.trim();
-    if (!name) return toast("Informe o nome do bairro.");
-    const state = getState();
-    let id = slugify(name);
-    if (state.bairros.some((b) => b.id === id)) id += `_${Date.now().toString(36)}`;
-    state.bairros.push({
-      id,
-      name,
-      fee: Number($("newBairroFee").value) || 0,
-      min: Number($("newBairroMin").value) || 30,
-      max: Number($("newBairroMax").value) || 50,
-    });
-    saveState();
-    for (const f of ["newBairroName", "newBairroFee", "newBairroMin", "newBairroMax"]) $(f).value = "";
-    renderDelivery();
-    toast("Bairro adicionado");
+    if (!button) return;
+
+    const row = button.closest("[data-id]");
+
+    button.disabled = true;
+
+    try {
+      const name = row.querySelector(
+        '[data-field="name"]'
+      ).value.trim();
+
+      if (!name) {
+        throw new Error("Informe o nome do produto.");
+      }
+
+      await updateProduct(Number(row.dataset.id), {
+        name,
+
+        category: row.querySelector(
+          '[data-field="category"]'
+        ).value,
+
+        description: row.querySelector(
+          '[data-field="description"]'
+        ).value.trim(),
+
+        price_cents: readPrice(
+          row.querySelector(
+            '[data-field="price"]'
+          ).value
+        ),
+
+        active: row.querySelector(
+          '[data-field="active"]'
+        ).checked
+      });
+
+      toast("Produto atualizado com sucesso!");
+      await renderItems();
+
+    } catch (error) {
+      toast(error.message);
+    } finally {
+      button.disabled = false;
+    }
   });
 }

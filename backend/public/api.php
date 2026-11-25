@@ -15,7 +15,18 @@ try {
             'user' => safeUser()
         ]);
     }
+    
+if ($path === '/api/products/manage' && $method === 'GET') {
+    requireAdmin();
 
+    send([
+        'products' => db()->query(
+            'SELECT id,category,name,description,price_cents,active
+             FROM products
+             ORDER BY id'
+        )->fetchAll()
+    ]);
+}
     if ($path === '/api/products' && $method === 'GET') {
         send([
             'products' => db()->query(
