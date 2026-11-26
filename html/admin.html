@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Área da Dona - Chalé da Borges</title>
-  <link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="../style.css?v=2">
 </head>
 <body>
 
@@ -69,38 +69,50 @@
 
       <!-- ESTABELECIMENTO -->
 
-      <div class="admin-panel active" id="admin-business">
+<div class="admin-panel active" id="admin-business">
 
-        <div class="form-grid">
+  <div class="form-grid">
 
-          <label for="adminName">Nome
-            <input id="adminName">
-          </label>
+    <label for="adminName">Nome
+      <input id="adminName">
+    </label>
 
-          <label for="adminTagline">Subtítulo
-            <input id="adminTagline">
-          </label>
+    <label for="adminTagline">Subtítulo
+      <input id="adminTagline">
+    </label>
 
-          <label for="adminAbout" class="wide">Descrição
-            <textarea id="adminAbout"></textarea>
-          </label>
+    <label for="adminAbout" class="wide">Descrição
+      <textarea id="adminAbout"></textarea>
+    </label>
 
-          <label for="adminHours">Horário
-            <input id="adminHours">
-          </label>
+    <label for="adminWhatsapp">WhatsApp
+      <input id="adminWhatsapp" type="tel">
+    </label>
 
-          <label for="adminEta">Tempo de entrega
-            <input id="adminEta">
-          </label>
+    <label for="adminEta">Tempo de entrega
+      <input id="adminEta">
+    </label>
 
-        </div>
+    <label for="adminOpen">Horário de abertura
+      <input id="adminOpen" type="time">
+    </label>
 
-        <button class="primary-btn" id="saveBusiness">
-          Salvar informações
-        </button>
+    <label for="adminClose">Horário de fechamento
+      <input id="adminClose" type="time">
+    </label>
 
-      </div>
+    <div class="wide">
+      <strong>Dias de funcionamento</strong>
+      <div id="adminDays"></div>
+    </div>
 
+  </div>
+
+  <button class="primary-btn" id="saveBusiness">
+    Salvar informações
+  </button>
+
+</div>
       <!-- ENTREGAS -->
 
       <div class="admin-panel" id="admin-delivery">

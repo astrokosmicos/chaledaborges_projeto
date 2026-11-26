@@ -92,6 +92,10 @@ function initTabs() {
       if (tab.dataset.adminTab === "orders") {
         renderOrders();
       }
+
+      if (tab.dataset.adminTab === "items") {
+        renderItems();
+      }
     })
   );
 }

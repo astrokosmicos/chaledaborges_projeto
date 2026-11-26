@@ -1303,16 +1303,60 @@ footer p {
 
 .admin-toolbar input { flex: 1; min-width: 200px; }
 
-.admin-item-row {
-  display: grid;
-  grid-template-columns: 1.6fr 90px 1fr auto auto;
-  gap: 8px;
-  align-items: center;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--line);
+.admin-category {
+    margin-bottom: 28px;
 }
 
-.admin-item-row .desc { grid-column: 1 / -1; font-size: 13px; color: var(--muted); }
+.admin-category-title {
+    color: var(--accent);
+    font-size: 22px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--line);
+}
+
+.admin-item-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 120px;
+    gap: 14px;
+    align-items: start;
+    padding: 18px;
+    margin-bottom: 16px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: var(--paper);
+}
+
+.admin-item-row label {
+    min-width: 0;
+}
+
+.admin-item-row label:first-child,
+.admin-item-row label:nth-child(4) {
+    grid-column: 1 / -1;
+}
+
+.admin-item-row textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.admin-item-row label:nth-child(5) {
+    flex-direction: row;
+    align-items: center;
+    align-self: center;
+}
+
+.admin-item-row input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--accent);
+}
+
+.admin-item-row .primary-btn {
+    grid-column: 2;
+    justify-self: end;
+    white-space: nowrap;
+}
 
 .admin-item-row input,
 .admin-bairro-row input,
@@ -1491,10 +1535,8 @@ footer p {
   .modal h1, .modal h2 { font-size: 32px; }
   .form-grid { grid-template-columns: 1fr; }
   .hero-meta { flex-direction: column; gap: 8px; }
-  .admin-item-row { grid-template-columns: 1fr 90px; }
-  .admin-item-row input[data-f="cat"] { grid-column: 1 / -1; }
-  .admin-item-row .check { grid-column: 1; }
-  .admin-item-row .danger-btn { grid-column: 2; }
+  .admin-item-row {grid-template-columns: 1fr; padding: 14px; }
+  .admin-item-row .primary-btn { grid-column: 1 / -1; width: 100%; }
   .admin-add-row { grid-template-columns: 1fr; }
   .admin-bairro-head { display: none; }
   .admin-bairro-row { grid-template-columns: 1fr 1fr; }

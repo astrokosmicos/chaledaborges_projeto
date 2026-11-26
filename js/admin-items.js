@@ -44,54 +44,76 @@ export async function renderItems() {
   try {
     const products = await fetchProducts();
 
-    list.innerHTML = products.map(product => `
-      <div class="admin-item-row"
-        data-id="${Number(product.id)}">
+    const categories = [...new Set([
+      ...MENU_CATEGORIES,
+      ...products.map(product => product.category)
+    ])];
 
-        <label>Nome
-          <input data-field="name"
-            value="${escapeHTML(product.name)}">
-        </label>
+    list.innerHTML = categories.map(category => {
+      const items = products.filter(
+        product => product.category === category
+      );
 
-        <label>Categoria
-          <select data-field="category">
-            ${categoryOptions(product.category)}
-          </select>
-        </label>
+      if (items.length === 0) return "";
 
-        <label>Preço (R$)
-          <input data-field="price"
-            type="number"
-            min="0"
-            step="0.01"
-            value="${(Number(product.price_cents) / 100).toFixed(2)}">
-        </label>
+      return `
+        <section class="admin-category">
 
-        <label>Descrição
-          <textarea data-field="description">${escapeHTML(product.description || "")}</textarea>
-        </label>
+          <h3 class="admin-category-title">
+            ${escapeHTML(category)}
+          </h3>
 
-        <label>
-          <input data-field="active"
-            type="checkbox"
-            ${Number(product.active) === 1 ? "checked" : ""}>
-          Produto disponível
-        </label>
+          ${items.map(product => `
+            <div class="admin-item-row"
+              data-id="${Number(product.id)}">
 
-        <button type="button"
-          class="primary-btn"
-          data-action="save">
-          Salvar alterações
-        </button>
+              <label>Nome
+                <input data-field="name"
+                  value="${escapeHTML(product.name)}">
+              </label>
 
-      </div>
-    `).join("");
+              <label>Categoria
+                <select data-field="category">
+                  ${categoryOptions(product.category)}
+                </select>
+              </label>
+
+              <label>Preço (R$)
+                <input data-field="price"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value="${(Number(product.price_cents) / 100).toFixed(2)}">
+              </label>
+
+              <label>Descrição
+                <textarea data-field="description">${escapeHTML(product.description || "")}</textarea>
+              </label>
+
+              <label>
+                <input data-field="active"
+                  type="checkbox"
+                  ${Number(product.active) === 1 ? "checked" : ""}>
+                Produto disponível
+              </label>
+
+              <button type="button"
+                class="primary-btn"
+                data-action="save">
+                Salvar alterações
+              </button>
+
+            </div>
+          `).join("")}
+
+        </section>
+      `;
+    }).join("");
 
   } catch (error) {
     list.textContent = error.message;
   }
 }
-
 export function initItems() {
   if (initialized) return;
   initialized = true;
