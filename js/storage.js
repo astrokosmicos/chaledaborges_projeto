@@ -1,5 +1,6 @@
 import { STORAGE_KEYS, DEFAULT_BUSINESS, DEFAULT_BAIRROS } from "./config.js";
 import { MENU_ITEMS } from "./menu-data.js";
+import { fetchPublicProducts } from "./auth.js";
 
 function read(key, fallback) {
   try {
@@ -45,6 +46,42 @@ export function getState() {
 
 export function saveState() {
   return write(STORAGE_KEYS.state, getState());
+}
+let productsRequest = null;
+
+export async function syncProducts() {
+  if (productsRequest) return productsRequest;
+
+  productsRequest = (async () => {
+    const products = await fetchPublicProducts();
+
+    const items = products.map(product => {
+      const original = MENU_ITEMS.find(
+        item => Number(item.id) === Number(product.id)
+      );
+
+      return {
+        id: Number(product.id),
+        name: product.name,
+        cat: product.category,
+        desc: product.description || "",
+        price: Number(product.price_cents) / 100,
+        available: Number(product.active ?? 1) === 1,
+        featured: original?.featured || false,
+        tags: original?.tags || [],
+      };
+    });
+
+    getState().items = items;
+
+    return items;
+  })();
+
+  try {
+    return await productsRequest;
+  } finally {
+    productsRequest = null;
+  }
 }
 
 export function resetMenuToDefault() {

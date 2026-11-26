@@ -1,6 +1,6 @@
 import { PAYMENT_METHODS } from "./config.js";
-import { getState, getOrders, saveOrders, getSavedBairro, saveBairro } from "./storage.js";
-import { getCartRows, cartSubtotal, clearCart, closeCart } from "./cart.js";
+import { getState, getOrders, saveOrders, getSavedBairro, saveBairro, syncProducts } from "./storage.js";
+import { getCartRows, cartSubtotal, clearCart, closeCart, renderCart } from "./cart.js";
 import { findBairro, bairroOptionsHTML } from "./delivery.js";
 import { currentUser, createOrder } from "./auth.js";
 import { isOpenNow, nextOpeningText } from "./business.js";
@@ -23,6 +23,13 @@ function updateTotals() {
 }
 
 async function openCheckout() {
+  try {
+    await syncProducts();
+    renderCart();
+  } catch (error) {
+    return toast("Não foi possível atualizar os produtos.");
+  }
+
   const rows = getCartRows();
   if (!rows.length) return toast("Seu carrinho está vazio.");
 
@@ -83,7 +90,43 @@ export function whatsappLink(number, text) {
 
 async function placeOrder(e) {
   e.preventDefault();
+
+  const previousRows = JSON.stringify(
+    getCartRows().map(item => ({
+      id: item.id,
+      price: item.price,
+      qty: item.qty
+    }))
+  );
+
+  try {
+    await syncProducts();
+    renderCart();
+  } catch (error) {
+    return showError(
+      "Não foi possível conferir os produtos. Tente novamente."
+    );
+  }
+
   const rows = getCartRows();
+
+  const updatedRows = JSON.stringify(
+    rows.map(item => ({
+      id: item.id,
+      price: item.price,
+      qty: item.qty
+    }))
+  );
+
+  if (previousRows !== updatedRows) {
+    closeCheckout();
+
+    toast(
+      "O cardápio foi atualizado. Confira seu carrinho antes de continuar."
+    );
+
+    return;
+  }
   const apiItems = rows.map((item) => ({
     product_id: Number(item.id), quantity: Number(item.qty), 
   }));

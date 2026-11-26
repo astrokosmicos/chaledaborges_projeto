@@ -247,3 +247,17 @@ export async function updateProduct(id, product) {
 
   return data;
 }
+export async function fetchPublicProducts() {
+  const response = await fetch(`${API_URL}/products`, {
+    credentials: "same-origin",
+    cache: "no-store",
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error || "Erro ao carregar cardápio.");
+  }
+
+  return data.products;
+}

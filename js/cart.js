@@ -1,6 +1,4 @@
-import { getCart, saveCart, getState } from "./storage.js";
-import { $, money, escapeHTML, toast } from "./utils.js";
-
+import { getCart, saveCart, getState, syncProducts } from "./storage.js";
 export function getCartRows() {
   const items = getState().items;
   return getCart()
@@ -72,7 +70,15 @@ export function renderCart() {
   $("checkoutBtn").disabled = rows.length === 0;
 }
 
-export function openCart() {
+export async function openCart() {
+  try {
+    await syncProducts();
+    renderCart();
+  } catch (error) {
+    toast("Não foi possível atualizar o carrinho. Tente novamente.");
+    return;
+  }
+
   $("overlay").hidden = false;
   $("cartDrawer").classList.add("open");
   $("cartDrawer").setAttribute("aria-hidden", "false");

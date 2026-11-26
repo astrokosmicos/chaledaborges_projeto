@@ -1,13 +1,22 @@
 import { mountShell } from "./layout.js";
-import { getState } from "./storage.js";
+import { syncProducts } from "./storage.js";
 import { getCategories, filterItems, itemCardHTML } from "./menu.js";
 import { MENU_FOOTNOTE } from "./menu-data.js";
 import { $, escapeHTML } from "./utils.js";
+import { renderCart } from "./cart.js";
 
 mountShell();
 
 const params = new URLSearchParams(location.search);
-const { items } = getState();
+let items = [];
+
+try {
+items = await syncProducts(); renderCart();
+} catch (error) {
+  console.error("Erro ao carregar cardápio:", error);
+  $("emptyState").textContent =
+    "Não foi possível carregar o cardápio. Tente novamente.";
+}
 const categories = ["Todos", ...getCategories(items)];
 
 let activeCat = categories.includes(params.get("cat")) ? params.get("cat") : "Todos";

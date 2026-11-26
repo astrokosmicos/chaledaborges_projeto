@@ -1,5 +1,6 @@
 import { overlayHTML, cartDrawerHTML, checkoutModalHTML, mobileMenuHTML } from "./templates.js";
-import { initCart, closeCart } from "./cart.js";
+import { initCart, closeCart, renderCart } from "./cart.js";
+import { syncProducts, getState } from "./storage.js";
 import { initCheckout } from "./checkout.js";
 import { applyBusiness } from "./business.js";
 import { currentUser, logoutUser } from "./auth.js";
@@ -61,11 +62,24 @@ export function mountShell() {
     if (a.getAttribute("href") === page) a.classList.add("active");
   });
 
-  applyBusiness();
-  initCart();
-  initCheckout();
-  initMobileMenu();
-  void updateAuthLinks();
+ applyBusiness();
+
+getState().items = [];
+
+initCart();
+initCheckout();
+initMobileMenu();
+void updateAuthLinks();
+
+syncProducts()
+  .then(() => {
+    renderCart();
+  })
+  .catch(error => {
+    console.error("Erro ao sincronizar produtos:", error);
+    getState().items = [];
+    renderCart();
+  });
 
   document.addEventListener("keydown", (e) => {
     if (e.key !== "Escape") return;

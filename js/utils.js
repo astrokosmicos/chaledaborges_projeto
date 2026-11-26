@@ -46,5 +46,15 @@ export function toast(message) {
 }
 
 export function formatDateTime(iso) {
-  return new Date(iso).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" });
+  let value = String(iso).trim().replace(" ", "T");
+
+  if (!/(Z|[+-]\d{2}:?\d{2})$/i.test(value)) {
+    value += "Z";
+  }
+
+  return new Date(value).toLocaleString("pt-BR", {
+    dateStyle: "short",
+    timeStyle: "short",
+    timeZone: "America/Sao_Paulo"
+  });
 }
